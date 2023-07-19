@@ -1,0 +1,14 @@
+SAVE_PATH = "./model/bert.pth"
+MLM_PATH = "./model/mlm.hf"
+TKN_NAME = "bert-base-uncased"
+DS_NAME = "bookcorpus"
+
+SENTENCE_LEN = 128
+BATCH_SIZE=128
+LAYERS=8
+ATTN_HEADS=16
+EMBED_DEPTH=768
+HIDDEN_DEPTH=1024
+DROPOUT=.25
+
+EPOCHS = 200
