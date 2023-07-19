@@ -3,11 +3,12 @@ from torch import nn
 from activation import SwiGLU
 
 class FeedForward (nn.Module):
-    def __init__ (self, input_dim, hidden_dim, output_dim,
+    def __init__ (self, input_dim,
+            hidden_dim, output_dim,
             dropout_p, bias):
         super(FeedForward, self).__init__()
 
-        self.input_dim = input_dim
+        self.input_dim = input_dim 
         self.hidden_dim = hidden_dim
         self.ouput_dim = output_dim
         self.dropout_p = dropout_p
@@ -43,16 +44,15 @@ class BERTLayer(nn.Module):
         self.dropout_p = dropout_p
         
         self.self_attention = nn.MultiheadAttention(embed_depth,attn_heads)
-        self.feedforward = FeedForward(embed_depth, 
-                hidden_depth,embed_depth,dropout_p, bias=True)
+        self.feedforward = FeedForward(embed_depth,hidden_depth,
+                embed_depth,dropout_p, bias=True)
         self.layer_norm = nn.LayerNorm(embed_depth)
 
     # compute
     def forward (self, x):
-        x, attn_mask = x
-
         inp = self.layer_norm(x)
-        x = x + self.self_attention(inp,inp,inp,attn_mask=attn_mask)
+        attn_weights, _ = self.self_attention(inp,inp,inp)
+        x = x+ attn_weights
 
         inp = self.layer_norm(x)
         x = x + self.feedforward(x)

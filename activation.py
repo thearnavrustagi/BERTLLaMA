@@ -23,7 +23,7 @@ class SwiGLU (nn.Module):
         self.sigmoid = nn.Sigmoid()
 
     def forward (self, x):
-        n = tuple(x.size())[0]
+        n = tuple(x.size())[1]
 
         swish_in = matmul(x,self.silu_projection)
         if self.bias_1_present: swish_in += self.bias_1.repeat(n,1)

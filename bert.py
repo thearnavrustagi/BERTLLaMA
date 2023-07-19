@@ -44,12 +44,12 @@ class BERT (nn.Module):
         self.optimizer = AdamW(self.parameters(), lr=1e-4)
 
     def forward (self, x):
-        x, posn, attn_masks = x
+        x, posn = x
 
         x  = self.word_embedding(x)
         x += self.positional_embedding(posn)
         for layer in self.encoder_stack:
-            z = (self.norm(x), attn_masks)
+            z = self.norm(x)
             x = x + layer(z)
         x = self.output_projection(x)
         return x
@@ -66,8 +66,8 @@ class BERT (nn.Module):
         for x in (pbar := tqdm(dataloader)):
             self.optimizer.zero_grad()
 
-            x,posn,attn_mask ,y = x
-            y_pred = self((x,posn,attn_mask))
+            x,posn,y = x
+            y_pred = self((x,posn))
 
             loss = self.loss(y_pred,y)
             loss.backward()

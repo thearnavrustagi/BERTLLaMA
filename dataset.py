@@ -24,11 +24,11 @@ class MLMDataset (Dataset):
         x = self.__tokenize__(self.src[idx]['text'])
         y = []
         for a in x:
-            z = [0] * len(self.tokenizer)
-            z[a] = 1
+            z = [0.0] * len(self.tokenizer)
+            z[a] = 1.0
             y.append(z)
 
-        attn_mask = [1 if a else a for a in x]
+        attn_mask = [True if a else False for a in x]
         num_bpe = sum(attn_mask)
 
         masks = self.tokenizer.encode("[MASK]")[1:2]*8 + [True]
@@ -40,11 +40,10 @@ class MLMDataset (Dataset):
             x[i] = z
 
         x = torch.tensor(x)
-        attn_mask = torch.tensor(attn_mask)
         posn = torch.tensor(range(len(x)))
         y = torch.tensor(y)
 
-        return (x,posn,attn_mask,y)
+        return (x,posn,y)
 
     def __len__ (self):
         return len(self.src)
